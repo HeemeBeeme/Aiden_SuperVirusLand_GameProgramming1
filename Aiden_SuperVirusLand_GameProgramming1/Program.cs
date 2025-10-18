@@ -9,9 +9,18 @@ namespace Aiden_SuperVirusLand_GameProgramming1
     internal class Program
     {
         static Random VirusMovement = new Random();
+        static String VirusLetter = "X";
 
-        static int VirusPositionX;
-        static int VirusPositionY;
+        static List<Tuple<int, int>> VirusPositionList = new List<Tuple<int, int>>
+        {
+            Tuple.Create(5, 8),
+            Tuple.Create(10, 5),
+            Tuple.Create(15, 8)
+        };
+        static Tuple<int, int> VirusPositions = VirusPositionList[0];
+
+        static int VirusX = VirusPositions.Item1;
+        static int VirusY = VirusPositions.Item2;
 
 
         static Char[,] mapArray = { { '^', '^', '^', '^', '^', '^', '^', '-', '-', '-', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~' },
@@ -25,60 +34,64 @@ namespace Aiden_SuperVirusLand_GameProgramming1
                                     { '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-' }
         };
 
-        static String Virus = "X";
-        static void Main(string[] args)
+        static void PrintMap()
         {
-            for(int i = 0; i < mapArray.GetLength(0); i++)
+            for (int i = 0; i < mapArray.GetLength(0); i++)
             {
-                for(int j = 0; j < mapArray.GetLength(1); j++)
+                for (int j = 0; j < mapArray.GetLength(1); j++)
                 {
                     if (mapArray[i, j] == '-')
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGreen;
                     }
-                    else if(mapArray[i, j] == '~')
+                    else if (mapArray[i, j] == '~')
                     {
                         Console.ForegroundColor = ConsoleColor.DarkBlue;
                     }
-                    else if(mapArray[i, j] == '^')
+                    else if (mapArray[i, j] == '^')
                     {
                         Console.ForegroundColor = ConsoleColor.DarkGray;
                     }
-                        Console.Write(mapArray[i, j]/* + " "*/);
+                    Console.Write(mapArray[i, j]/* + " "*/);
                 }
                 Console.ForegroundColor = ConsoleColor.Gray;
 
                 Console.WriteLine();
-
             }
+        }
 
+        static void ChangeList(int index)
+        {
+            VirusPositions = VirusPositionList[index];
 
-            for (int l = 0; l < 20; l++)
-            {
-                VirusPositionX = VirusMovement.Next(0, mapArray.GetLength(1) - 1);
-                VirusPositionY = VirusMovement.Next(0, mapArray.GetLength(0) - 1);
+            VirusX = VirusPositions.Item1;
+            VirusY = VirusPositions.Item2;
+        }
+        static void Virus()
+        {
+            ChangeList(0);
+            Console.SetCursorPosition(VirusX, VirusY);
+            Console.WriteLine(VirusLetter);
 
-                Console.SetCursorPosition(VirusPositionX, VirusPositionY);
-                Char CurrentChar = mapArray[VirusPositionX, VirusPositionY];
+            ChangeList(1);
+            Console.SetCursorPosition(VirusX, VirusY);
+            Console.WriteLine(VirusLetter);
 
-                if (CurrentChar == '-')
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write(Virus);
-                }
-                else
-                {
-                    if(l > 0)
-                    {
-                        l--;
-                    }
-                    
-                }
+            ChangeList(2);
+            Console.SetCursorPosition(VirusX, VirusY);
+            Console.WriteLine(VirusLetter);
+        }
 
-            }
+        static void Main(string[] args)
+        {
+            Console.CursorSize = 100;
+            PrintMap();
+            Console.WriteLine("Map Printed");
+            Console.ReadKey(false);
 
+            Virus();
+            Console.ReadKey();
 
-            Console.SetCursorPosition(0, 10);
         }
     }
 }
