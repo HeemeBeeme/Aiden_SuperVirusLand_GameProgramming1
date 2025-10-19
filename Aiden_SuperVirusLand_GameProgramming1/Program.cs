@@ -19,10 +19,10 @@ namespace Aiden_SuperVirusLand_GameProgramming1
             Tuple.Create(10, 5),
             Tuple.Create(15, 8)
         };
-        static Tuple<int, int> VirusPositions = VirusPositionList[0];
+        static Tuple<int, int> VirusPositions;
 
-        static int VirusX = VirusPositions.Item1;
-        static int VirusY = VirusPositions.Item2;
+        static int VirusX;
+        static int VirusY;
 
 
         static Char[,] mapArray = { { '^', '^', '^', '^', '^', '^', '^', '-', '-', '-', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~', '~' },
@@ -73,83 +73,72 @@ namespace Aiden_SuperVirusLand_GameProgramming1
             VirusX = VirusPositions.Item1;
             VirusY = VirusPositions.Item2;
 
-            Random UpDownLeftRightRnD = new Random();
-            int UpDownLeftRight = UpDownLeftRightRnD.Next(0, 4);
+            int UpDownLeftRight = VirusMovement.Next(0, 4);
 
             int newX = VirusX;
             int newY = VirusY;
 
-            Console.WriteLine($"Current Position: ({VirusX}, {VirusY}), Direction: {UpDownLeftRight}");
+            int CursorY = Console.CursorTop;
 
-
-            if (UpDownLeftRight == 0 && VirusY > 0)
+            switch (UpDownLeftRight)
             {
-                if (mapArray[VirusX, VirusY - 1] == '-')
+                case 0: //up
+                    if (VirusY > 0) newY = VirusY - 1;
+                    break;
+
+                case 1: //down
+                    if (VirusY < mapArray.GetLength(0) - 1) newY = VirusY + 1;
+                    break;
+
+                case 2: //left
+                    if (VirusX > 0) newX = VirusX - 1;
+                    break;
+
+                case 3: //right
+                    if (VirusX < mapArray.GetLength(1) - 1) newX = VirusX + 1;
+                    break;
+            }
+
+            if (newX >= 0 && newX < mapArray.GetLength(0) && newY >= 0 && newY < mapArray.GetLength(1))
+            {
+
+                if (mapArray[newX, newY] == '-')
                 {
-                    newX = VirusY - 1;
+                    Console.SetCursorPosition(VirusX, VirusY);
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
+                    Console.Write(mapArray[VirusX, VirusY]);
+                    Console.ForegroundColor = ConsoleColor.Gray;
+
+                    VirusX = newX;
+                    VirusY = newY;
+
+                    var newVirusList = Tuple.Create(VirusX, VirusY);
+                    VirusPositionList[index] = newVirusList;
+
+                    Console.SetCursorPosition(VirusX, VirusY);
+                    Console.Write(VirusLetter);
                 }
-            }
-            else if (UpDownLeftRight == 1 && VirusY < mapArray.GetLength(1) - 1)
-            {
-                if (mapArray[VirusX, VirusY + 1] == '-')
+                else
                 {
-                    newX = VirusY + 1;
+                    return;
                 }
-            }
-            else if (UpDownLeftRight == 2 && VirusX > 0)
-            {
-                if (mapArray[VirusX - 1, VirusY] == '-')
-                {
-                    newX = VirusX - 1;
-                }
-            }
-            else if (UpDownLeftRight == 3 && VirusX < mapArray.GetLength(0) - 1)
-            {
-                if (mapArray[VirusX - 1, VirusY] == '-')
-                {
-                    newX = VirusX + 1;
-                }
-            }
-            else
-            {
-                return;
-            }
 
-            if (newX >= 0 && newX < mapArray.GetLength(0) && newY >= 0 && newY < mapArray.GetLength(1) && mapArray[newX, newY] == '-')
-            {
-                Console.SetCursorPosition(VirusX, VirusY);
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
-                Console.Write(mapArray[VirusX, VirusY]);
-                Console.ForegroundColor = ConsoleColor.Gray;
-
-                VirusX = newX;
-                VirusY = newY;
-                VirusPositionList[index] = Tuple.Create(VirusX, VirusY);
-
-                Console.SetCursorPosition(VirusX, VirusY);
-                Console.Write(VirusLetter);
             }
-            else
-            {
-                Console.WriteLine($"Invalid Move: Current Position: ({VirusX}, {VirusY}) | New Position: ({newX}, {newY})");
-                return;
-            }
-
-
         }
+
 
         static void Main(string[] args)
         {
+            Console.CursorVisible = false;
             PrintMap();
-            Console.WriteLine("Map Printed");
             Console.ReadKey(false);
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1000; i++)
             {
                 Virus(i % VirusPositionList.Count);
-                Thread.Sleep(1000);
+                Thread.Sleep(10);
             }
-
         }
+
     }
 }
