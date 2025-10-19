@@ -93,15 +93,16 @@ namespace Aiden_SuperVirusLand_GameProgramming1
                     break;
             }
 
-            if (newX >= 0 && newX < mapArray.GetLength(1) && newY >= 0 && newY < mapArray.GetLength(0))
-            {
+            bool virusSpot = VirusPositionList.Any(v => v.Item1 == newX && v.Item2 == newY);
 
+            if (newX >= 0 && newX < mapArray.GetLength(1) && newY >= 0 && newY < mapArray.GetLength(0) && !virusSpot)
+            {
                 if (mapArray[newY, newX] == '-')
                 {
                     Console.SetCursorPosition(VirusX, VirusY);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write(mapArray[VirusY, VirusX]);
-                    Console.ForegroundColor= ConsoleColor.Gray;
+                    Console.ForegroundColor = ConsoleColor.Gray;
 
                     VirusX = newX;
                     VirusY = newY;
@@ -113,13 +114,14 @@ namespace Aiden_SuperVirusLand_GameProgramming1
                     Console.Write(VirusLetter);
 
                     Random Duplicate = new Random();
-                    if(Duplicate.Next(0, 100) >= 90)
+                    if (Duplicate.Next(0, 100) >= 90)
                     {
                         VirusPositionList.Add(Tuple.Create(newX, newY));
                     }
                 }
             }
         }
+
 
 
 
@@ -132,7 +134,7 @@ namespace Aiden_SuperVirusLand_GameProgramming1
             for (int i = 0; i < 1000; i++)
             {
                 Virus(i % VirusPositionList.Count);
-                Thread.Sleep(100);
+                Thread.Sleep(10);
             }
         }
 
