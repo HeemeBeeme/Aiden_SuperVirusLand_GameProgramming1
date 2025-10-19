@@ -74,40 +74,34 @@ namespace Aiden_SuperVirusLand_GameProgramming1
             VirusY = VirusPositions.Item2;
 
             int UpDownLeftRight = VirusMovement.Next(0, 4);
-
             int newX = VirusX;
             int newY = VirusY;
 
-            int CursorY = Console.CursorTop;
-
             switch (UpDownLeftRight)
             {
-                case 0: //up
+                case 0: // up
                     if (VirusY > 0) newY = VirusY - 1;
                     break;
-
-                case 1: //down
+                case 1: // down
                     if (VirusY < mapArray.GetLength(0) - 1) newY = VirusY + 1;
                     break;
-
-                case 2: //left
+                case 2: // left
                     if (VirusX > 0) newX = VirusX - 1;
                     break;
-
-                case 3: //right
+                case 3: // right
                     if (VirusX < mapArray.GetLength(1) - 1) newX = VirusX + 1;
                     break;
             }
 
-            if (newX >= 0 && newX < mapArray.GetLength(0) && newY >= 0 && newY < mapArray.GetLength(1))
+            if (newX >= 0 && newX < mapArray.GetLength(1) && newY >= 0 && newY < mapArray.GetLength(0))
             {
 
-                if (mapArray[newX, newY] == '-')
+                if (mapArray[newY, newX] == '-')
                 {
                     Console.SetCursorPosition(VirusX, VirusY);
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.Write(mapArray[VirusX, VirusY]);
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.Write(mapArray[VirusY, VirusX]);
+                    Console.ForegroundColor= ConsoleColor.Gray;
 
                     VirusX = newX;
                     VirusY = newY;
@@ -117,14 +111,16 @@ namespace Aiden_SuperVirusLand_GameProgramming1
 
                     Console.SetCursorPosition(VirusX, VirusY);
                     Console.Write(VirusLetter);
-                }
-                else
-                {
-                    return;
-                }
 
+                    Random Duplicate = new Random();
+                    if(Duplicate.Next(0, 100) >= 90)
+                    {
+                        VirusPositionList.Add(Tuple.Create(newX, newY));
+                    }
+                }
             }
         }
+
 
 
         static void Main(string[] args)
@@ -136,7 +132,7 @@ namespace Aiden_SuperVirusLand_GameProgramming1
             for (int i = 0; i < 1000; i++)
             {
                 Virus(i % VirusPositionList.Count);
-                Thread.Sleep(10);
+                Thread.Sleep(100);
             }
         }
 
