@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Aiden_SuperVirusLand_GameProgramming1
@@ -63,28 +64,59 @@ namespace Aiden_SuperVirusLand_GameProgramming1
         static void ChangeList(int index)
         {
             VirusPositions = VirusPositionList[index];
-
             VirusX = VirusPositions.Item1;
             VirusY = VirusPositions.Item2;
+
+            Console.SetCursorPosition(VirusX, VirusY);
+            Console.Write(VirusLetter);
         }
         static void Virus()
         {
-            ChangeList(0);
-            Console.SetCursorPosition(VirusX, VirusY);
-            Console.WriteLine(VirusLetter);
+            for(int i = 0; i < 4; i++)
+            {
+                Random UpDownLeftRightRnD = new Random();
+                int UpDownLeftRight = UpDownLeftRightRnD.Next(0, 4);
 
-            ChangeList(1);
-            Console.SetCursorPosition(VirusX, VirusY);
-            Console.WriteLine(VirusLetter);
 
-            ChangeList(2);
-            Console.SetCursorPosition(VirusX, VirusY);
-            Console.WriteLine(VirusLetter);
+                //up
+                if (UpDownLeftRight == 0 && mapArray[VirusX, VirusY + 1] == '-')
+                {
+                    VirusPositionList[i] = Tuple.Create(VirusX, VirusY++);
+                    Console.WriteLine("up");
+                }
+                //down
+                else if (UpDownLeftRight == 1 && mapArray[VirusX, VirusY - 1] == '-')
+                {
+                    VirusPositionList[i] = Tuple.Create(VirusX, VirusY--);
+                    Console.WriteLine("down");
+                }
+                //left
+                else if (UpDownLeftRight == 2 && mapArray[VirusX - 1, VirusY] == '-')
+                {
+                    VirusPositionList[i] = Tuple.Create(VirusX--, VirusY);
+                    Console.WriteLine("left");
+                }
+                //right
+                else if (UpDownLeftRight == 3 && mapArray[VirusX + 1, VirusY] == '-')
+                {
+                    VirusPositionList[i] = Tuple.Create(VirusX++, VirusY);
+                    Console.WriteLine("right");
+                }
+                else
+                {
+                    Console.WriteLine("B");
+                }
+
+                ChangeList(i);
+
+                Thread.Sleep(1000);
+
+            }
+            
         }
 
         static void Main(string[] args)
         {
-            Console.CursorSize = 100;
             PrintMap();
             Console.WriteLine("Map Printed");
             Console.ReadKey(false);
