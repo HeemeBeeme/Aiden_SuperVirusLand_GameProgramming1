@@ -134,7 +134,7 @@ namespace Aiden_SuperVirusLand_GameProgramming1
             for (int i = 0; i < 1000; i++)
             {
                 Virus(i % VirusPositionList.Count);
-                Thread.Sleep(10);
+                Thread.Sleep(1000);
             }
         }
 
